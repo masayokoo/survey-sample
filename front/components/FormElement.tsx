@@ -4,23 +4,21 @@ import {
   Form as FormikForm,
   Field,
   ErrorMessage,
-  useFormikContext,
-  useField
 } from 'formik';
 
-export function Form(props) {
+export const Form = (props: any ) => {
   return (
     <Formik
       {...props}
     >
-      <FormikForm className="needs-validation" noValidate="">
+      <FormikForm className="needs-validation" noValidate={true}>
         {props.children}
       </FormikForm>
     </Formik>
   )
 }
 
-export function TextField(props) {
+export const TextField = (props: { [x: string]: any; field: string; label: string; placeholder?: string; formik: any; }) => {
   const { field, label, placeholder, formik, ...rest } = props
   return (
     <>
@@ -39,7 +37,7 @@ export function TextField(props) {
   )
 }
 
-export function TextAreaField(props) {
+export const TextAreaField = (props: { [x: string]: any; field: string; label: string; placeholder?: string; formik: any; }) => {
   const { field, label, placeholder, formik, ...rest } = props
   return (
     <>
@@ -58,7 +56,7 @@ export function TextAreaField(props) {
   )
 }
 
-export function SelectField(props) {
+export const SelectField = (props: { field: string; label: string; options: any; formik: any; }) => {
   const { field, label, options, formik } = props
   return (
     <>
@@ -69,22 +67,22 @@ export function SelectField(props) {
         name={field}
         onChange={formik.handleChange}
       >
-        <option value="" >Choose...</option>
-        {options.map((optn, index) => <option key={index} value={optn.value} label={optn.label || optn.value} />)}
+        <option value="" >選択してください</option>
+        {options.map((optn: { value: string | number | readonly string[] | undefined; label: any; }, index: string | number | null | undefined) => <option key={index} value={optn.value} label={optn.label || optn.value} />)}
       </Field>
       <ErrorMessage name={field} render={msg => <div style={{ color: 'red' }} >{msg}</div>} />
     </>
   )
 }
 
-export function RadioField(props) {
+export const RadioField = (props: { field: string; label: string; options: any; formik: any; }) => {
   const { field, label, options, formik } = props
   return (
     <>
-      <div id="my-radio-group">Picked</div>
+      <div id="my-radio-group">{label}</div>
       <div role="group" aria-labelledby="my-radio-group">
         {
-          options.map((optn, index) => {
+          options.map((optn: { value: string; label: string; }, index: number | null | undefined) => {
             return (
               <label key={index} htmlFor={`${field}_${optn.value}`} >
                 <Field
@@ -105,14 +103,14 @@ export function RadioField(props) {
   )
 }
 
-export function CheckField(props) {
+export const CheckField = (props: { field: string; label: string; options: any; formik: any; }) => {
   const { field, label, options, formik } = props
   return (
     <>
-      <div id="my-radio-group">Picked</div>
-      <div role="group" aria-labelledby="my-radio-group">
+      <div id="my-check-group">{label}</div>
+      <div role="group" aria-labelledby="my-check-group">
         {
-          options.map((optn, index) => {
+          options.map((optn: { value: string; label: string; }, index: number | null | undefined) => {
             return (
               <label key={index} htmlFor={`${field}_${optn.value}`} >
                 <Field
@@ -134,11 +132,10 @@ export function CheckField(props) {
   )
 }
 
-export function SubmitButton(props){
+export const SubmitButton = (props: { [x: string]: any; title: any; }) => {
   const { title, ...rest } = props;
-  const { isSubmitting } = false;
 
   return (
-    <button type="submit" {...rest} disabled={isSubmitting}>{title}</button>
+    <button type="submit" {...rest} >{title}</button>
   )
 }

@@ -7,10 +7,16 @@
 export type Question = {
   id: number
   type: string
-  options?: Object[]
+  options?: object[]
   label: string
   field: string
-  displayConditions?: String[]
+  placeholder?: string
+  displayConditions?: DisplayCondition[]
+}
+
+type DisplayCondition = {
+  field: string
+  values?: string[]
 }
 
 export type Page = {

@@ -13,6 +13,7 @@ export const sampleSurveys: Survey[] = [
         type: 'text_field',
         field: 'name1',
         label: 'Hoge',
+        placeholder: 'placeholder',
       },
       {
         id: 2,
@@ -49,6 +50,12 @@ export const sampleSurveys: Survey[] = [
           {
             label: "User",
             value: "user",
+          }
+        ],
+        displayConditions: [
+          {
+            field: 'name3',
+            values: ['user']
           }
         ]
       },

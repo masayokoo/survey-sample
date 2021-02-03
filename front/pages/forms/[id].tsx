@@ -19,6 +19,7 @@ const StaticPropsDetail = ({ survey }: Props) => {
     const props = {
       field: question.field,
       label: question.label,
+      placeholder: question.placeholder,
       options: question.options,
       formik: formik,
     };
@@ -74,15 +75,24 @@ const StaticPropsDetail = ({ survey }: Props) => {
       title='hoge'
     >
       <Form
-        enableReinitialize
         initialValues={formData}
         onSubmit={formik.handleSubmit}
         >
-        {survey?.questions.map( (question) => (
-          <div key={question.id}>
-            {getFormElement(question, formik)}
-          </div>
-        ))}
+        {survey?.questions.map( (question) => {
+          const displayConditions = question.displayConditions;
+          const isDisp = displayConditions ? displayConditions?.some((condition) => {
+            const field = condition?.field
+            const targetValue = formik.values && Object(formik.values)[field]
+            return condition && condition.values?.indexOf(targetValue) !== -1
+          }) : true
+          if (!isDisp) return null;
+          return (
+            <div key={question.id}>
+              {getFormElement(question, formik)}
+            </div>
+          )
+        }
+        )}
         <SubmitButton
           title="Submit"
         />
