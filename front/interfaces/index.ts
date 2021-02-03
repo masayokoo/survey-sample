@@ -7,7 +7,7 @@
 export type Question = {
   id: number
   type: string
-  options?: String[]
+  options?: Object[]
   label: string
   field: string
   displayConditions?: String[]

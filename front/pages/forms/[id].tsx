@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import { Survey, Question } from '../../interfaces'
 import { sampleSurveys } from '../../utils/sample-data'
 import Layout from '../../components/Layout'
-import { Form, TextField, SelectField, SubmitButton } from '../../components/FormElement'
+import { Form, TextField, SelectField, CheckField, RadioField, TextAreaField, SubmitButton } from '../../components/FormElement'
 
 type Props = {
   survey?: Survey
@@ -17,18 +17,30 @@ const StaticPropsDetail = ({ survey }: Props) => {
 
   const getFormElement = (question: Question, formik: any) => {
     const props = {
-        name: question.label,
-        label: question.label,
-        options: question.options,
-        formik: formik,
+      field: question.field,
+      label: question.label,
+      options: question.options,
+      formik: formik,
     };
 
     if (question.type === "text_field" || question.type === "email") {
       return <TextField {...props} />
     }
 
+    if (question.type === "text_area") {
+      return <TextAreaField {...props} />
+    }
+
     if (question.type === "select_box") {
       return <SelectField  {...props} />
+    }
+
+    if (question.type === "check_box") {
+      return <CheckField  {...props} />
+    }
+
+    if (question.type === "radio_button") {
+      return <RadioField  {...props} />
     }
   }
 
@@ -36,8 +48,9 @@ const StaticPropsDetail = ({ survey }: Props) => {
     initialValues: {
     },
     onSubmit: async values => {
+      alert(JSON.stringify(values, null, 2))
       try {
-        const res = await fetch('https://example.com/submit', {
+        const res = await fetch('https://localhost:3000/api/surveys', {
           method: 'POST',
           body: JSON.stringify(values, null, 2),
           headers: {'Content-Type': 'application/json'},

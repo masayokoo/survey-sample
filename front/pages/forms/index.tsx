@@ -15,7 +15,7 @@ const WithStaticProps = ({ surveys }: Props) => (
     <p>
       Example fetching data from inside <code>getStaticProps()</code>.
     </p>
-    <p>You are currently on: /users</p>
+    <p>You are currently on: /surveys</p>
     {surveys.map((survey) => {
       return (
         <li key={survey.id} >
@@ -37,7 +37,9 @@ export const getStaticProps: GetStaticProps = async () => {
   // Example for including static props in a Next.js function component page.
   // Don't forget to include the respective types for any props passed into
   // the component.
-  const surveys: Survey[] = sampleSurveys
+  const res = await fetch('http://localhost:3000/api/surveys')
+  const json = await res.json()
+  const surveys: Survey[] = json
   return { props: { surveys } }
 }
 
