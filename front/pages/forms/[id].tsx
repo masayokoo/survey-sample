@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { GetStaticProps, GetStaticPaths } from 'next'
 import Router from 'next/router';
 
 import { useFormik } from 'formik';
 import { Survey, Question } from '../../interfaces'
-import { sampleSurveys } from '../../utils/sample-data'
+// import { sampleSurveys } from '../../utils/sample-data'
 import Layout from '../../components/Layout'
 import { Form, TextField, SelectField, CheckField, RadioField, TextAreaField, SubmitButton } from '../../components/FormElement'
 
@@ -13,7 +13,7 @@ type Props = {
 }
 
 const StaticPropsDetail = ({ survey }: Props) => {
-  const [formData, setFormData] = useState({});
+  const [formData] = useState({});
 
   const getFormElement = (question: Question, formik: any) => {
     const props = {
@@ -45,21 +45,29 @@ const StaticPropsDetail = ({ survey }: Props) => {
     }
   }
 
+  console.log()
+
   const formik = useFormik({
     initialValues: {
     },
     onSubmit: async values => {
-      alert(JSON.stringify(values, null, 2))
+      const payload = {
+        survey_answer: {
+          value: values
+        }
+      }
       try {
-        const res = await fetch('https://localhost:3000/api/surveys', {
+        const res = await fetch(`http://localhost:8888/surveys/${Router.query.id}/survey_answers`, {
           method: 'POST',
-          body: JSON.stringify(values, null, 2),
+          mode: 'cors',
+          body: JSON.stringify(payload),
           headers: {'Content-Type': 'application/json'},
         });
 
         const json = await res.json();
         if (json.success) {
-          Router.push('/success');
+          // Router.push('/success');
+          alert("success")
         } else {
           alert("error")
         }
@@ -105,7 +113,10 @@ export default StaticPropsDetail
 
 export const getStaticPaths: GetStaticPaths = async () => {
   // Get the paths we want to pre-render based on users
-  const paths = sampleSurveys.map((survey) => ({
+  const res = await fetch('http://localhost:8888/surveys')
+  const json = await res.json()
+  const surveys: Survey[] = json
+  const paths = surveys.map((survey) => ({
     params: { id: survey.id.toString() },
   }))
 
@@ -120,7 +131,9 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   try {
     const id = params?.id
-    const survey = sampleSurveys.find((survey) => survey.id === id)
+    const res = await fetch(`http://localhost:8888/surveys/${id}`)
+    const json = await res.json()
+    const survey: Survey = json
     // By returning { props: item }, the StaticPropsDetail component
     // will receive `item` as a prop at build time
     return { props: { survey } }
