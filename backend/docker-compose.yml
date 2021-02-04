@@ -1,0 +1,51 @@
+version: "3"
+services:
+  app: &app_base
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    command: /bin/sh -c "bundle exec jets server --host 0.0.0.0"
+    env_file:
+      - ./.env.development
+    volumes:
+      - .:/app
+      - bundle:/app/.bundle
+      - node_modules:/app/node_modules
+      - tmp:/app/tmp
+      - log:/app/log
+    ports:
+      - '8888:8888'
+    environment:
+      JETS_ENV: development
+    depends_on:
+      - db
+    tty: true
+    stdin_open: true
+    networks:
+      - ribbon_link
+  db:
+    image: mysql:8.0.22
+    command: --default-authentication-plugin=mysql_native_password --collation-server=utf8mb4_bin
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    ports:
+      - 3307:3306
+    # mysqlで `mbind: Operation not permitted` が出てしまう対応
+    # ref: https://stackoverflow.com/questions/55559386/how-to-fix-mbind-operation-not-permitted-in-mysql-error-log
+    cap_add:
+      - SYS_NICE
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - ribbon_link
+
+volumes:
+  mysql_data:
+  bundle:
+  node_modules:
+  tmp:
+  log:
+
+networks:
+  ribbon_link:
+    external: true

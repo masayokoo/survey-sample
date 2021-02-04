@@ -1,0 +1,12 @@
+<p>
+  <strong>Survey:</strong>
+  <%= @survey_answer.survey_id %>
+</p>
+
+<p>
+  <strong>Answers:</strong>
+  <%= @survey_answer.value %>
+</p>
+
+<%= link_to 'Edit', edit_survey_answer_path(@survey_answer) %> |
+<%#= link_to 'Back', survey_answers_path %>

@@ -1,0 +1,27 @@
+<h1>Survey Answers</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Survey</th>
+      <th>Answers</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @survey_answers.each do |survey_answer| %>
+      <tr class="jets-element-to-delete">
+        <td><%= survey_answer.survey_id %></td>
+        <td><%= survey_answer.value %></td>
+        <td><%= link_to 'Show', survey_answer %></td>
+        <td><%#= link_to 'Edit', edit_survey_answer_path(survey_answer) %></td>
+        <td><%#= link_to 'Destroy', survey_answer, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%#= link_to 'New Survey Answer', new_survey_answer_path %>
